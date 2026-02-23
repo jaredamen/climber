@@ -1,0 +1,156 @@
+version: '3'
+
+vars:
+  UV_RUN: uv run
+
+tasks:
+  # Development tasks
+  install:
+    desc: Install project in development mode
+    cmds:
+      - uv sync --all-extras
+
+  clean:
+    desc: Clean build artifacts and cache
+    cmds:
+      - rm -rf dist/
+      - rm -rf build/
+      - rm -rf *.egg-info/
+      - rm -rf .pytest_cache/
+      - rm -rf .mypy_cache/
+      - find . -type d -name __pycache__ -delete
+      - find . -type f -name "*.pyc" -delete
+
+  # Code quality
+  format:
+    desc: Format code with black and ruff
+    cmds:
+      - "{{.UV_RUN}} ruff format src/ tests/"
+      - "{{.UV_RUN}} ruff check --fix src/ tests/"
+
+  lint:
+    desc: Lint code with ruff
+    cmds:
+      - "{{.UV_RUN}} ruff check src/ tests/"
+
+  typecheck:
+    desc: Run type checking with mypy
+    cmds:
+      - "{{.UV_RUN}} mypy src/climber/"
+
+  check:
+    desc: Run all code quality checks
+    deps: [lint, typecheck]
+
+  # Testing
+  test:
+    desc: Run tests
+    cmds:
+      - "{{.UV_RUN}} pytest tests/ -v"
+
+  test-cov:
+    desc: Run tests with coverage
+    cmds:
+      - "{{.UV_RUN}} pytest tests/ --cov=climber --cov-report=html --cov-report=term"
+
+  test-watch:
+    desc: Run tests in watch mode
+    cmds:
+      - "{{.UV_RUN}} pytest-watch tests/ -v"
+
+  # Building and distribution
+  build:
+    desc: Build package
+    deps: [clean]
+    cmds:
+      - uv build
+
+  publish-test:
+    desc: Publish to test PyPI
+    deps: [build]
+    cmds:
+      - "{{.UV_RUN}} twine upload --repository testpypi dist/*"
+
+  publish:
+    desc: Publish to PyPI
+    deps: [build]
+    cmds:
+      - "{{.UV_RUN}} twine upload dist/*"
+
+  # Docker
+  docker-build:
+    desc: Build Docker image
+    cmds:
+      - docker build -t climber:latest .
+
+  docker-run:
+    desc: Run Docker container
+    cmds:
+      - docker run --rm -it climber:latest
+
+  # CLI testing
+  cli-help:
+    desc: Test CLI help
+    cmds:
+      - "{{.UV_RUN}} climber --help"
+      - "{{.UV_RUN}} climber config --help"
+      - "{{.UV_RUN}} climber ingest --help"
+
+  cli-config:
+    desc: Test CLI config commands
+    cmds:
+      - "{{.UV_RUN}} climber config show"
+
+  # Demo tasks
+  demo-setup:
+    desc: Set up demo environment
+    cmds:
+      - mkdir -p demo/
+      - echo "# Test Document\n\nThis is a test document for Climber demo." > demo/test.md
+
+  demo-run:
+    desc: Run demo (requires API key)
+    deps: [demo-setup]
+    cmds:
+      - "{{.UV_RUN}} climber ingest demo/test.md --output all --save demo/output/"
+
+  # All-in-one tasks
+  dev:
+    desc: Full development setup
+    cmds:
+      - task: install
+      - task: check
+      - task: test
+
+  ci:
+    desc: Run CI checks
+    cmds:
+      - task: check
+      - task: test-cov
+      - task: build
+
+  release:
+    desc: Prepare release (version bump, build, tag)
+    cmds:
+      - task: clean
+      - task: ci
+      - git tag -a v$(grep version pyproject.toml | head -1 | cut -d'"' -f2) -m "Release v$(grep version pyproject.toml | head -1 | cut -d'"' -f2)"
+      - echo "Ready to push tags and publish!"
+
+  # Documentation
+  docs-serve:
+    desc: Serve documentation locally
+    cmds:
+      - echo "README.md contains the main documentation"
+      - echo "Run 'python -m http.server' in project root to serve files"
+
+  # Health check
+  health:
+    desc: Check project health
+    cmds:
+      - echo "Python version:" && python --version
+      - echo "UV version:" && uv --version
+      - echo "Project structure:"
+      - find src/ -name "*.py" | head -10
+      - echo "Test files:" && find tests/ -name "*.py" | wc -l
+      - echo "Dependencies:" && uv pip list --format=json | jq length
