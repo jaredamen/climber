@@ -1,7 +1,9 @@
 """Pytest configuration and fixtures."""
 
-import pytest
 from unittest.mock import Mock
+
+import pytest
+
 from climber.config import Config
 from climber.ingest.base import ContentItem
 

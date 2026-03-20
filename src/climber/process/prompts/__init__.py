@@ -1,8 +1,8 @@
 """Prompt templates for different output types and presets."""
 
+from .audio_script import get_audio_script_prompt
 from .briefing import get_briefing_prompt
 from .flashcards import get_flashcards_prompt
-from .audio_script import get_audio_script_prompt
 
 
 def get_prompt_template(output_type: str, preset: str) -> str:

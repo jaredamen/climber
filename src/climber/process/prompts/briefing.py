@@ -2,7 +2,7 @@
 
 def get_briefing_prompt(preset: str) -> str:
     """Get briefing prompt for the specified preset."""
-    
+
     base_briefing = """
 Create a 2-minute executive briefing from the following content.
 
@@ -22,14 +22,14 @@ Instructions:
 
     presets = {
         "general": base_briefing,
-        
+
         "runbook": base_briefing + """
 - Focus on operational procedures, decision points, and critical steps
 - Highlight prerequisites, dependencies, and potential failure modes
 - Include escalation paths and key contacts if mentioned
 - Emphasize actionable information
 """,
-        
+
         "changelog": base_briefing + """
 - Focus on what changed, what's new, and what affects users
 - Categorize changes by impact level (breaking, feature, fix, etc.)
@@ -37,5 +37,5 @@ Instructions:
 - Include version numbers and dates if available
 """
     }
-    
+
     return presets.get(preset, base_briefing)
