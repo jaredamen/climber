@@ -29,7 +29,7 @@ class OpenAIProvider(BaseLLMProvider):
             return response.choices[0].message.content
 
         except Exception as e:
-            raise RuntimeError(f"OpenAI API error: {e}")
+            raise RuntimeError(f"OpenAI API error: {e}") from e
 
     def get_model_name(self) -> str:
         """Get the model name being used."""

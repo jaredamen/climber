@@ -28,7 +28,7 @@ class AnthropicProvider(BaseLLMProvider):
             return message.content[0].text
 
         except Exception as e:
-            raise RuntimeError(f"Anthropic API error: {e}")
+            raise RuntimeError(f"Anthropic API error: {e}") from e
 
     def get_model_name(self) -> str:
         """Get the model name being used."""

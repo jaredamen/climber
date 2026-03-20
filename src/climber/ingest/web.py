@@ -45,7 +45,7 @@ class WebIngester(BaseIngester):
             )
 
         except requests.RequestException as e:
-            raise RuntimeError(f"Failed to fetch URL {self.url}: {e}")
+            raise RuntimeError(f"Failed to fetch URL {self.url}: {e}") from e
 
     def _extract_title(self, soup: BeautifulSoup) -> Optional[str]:
         """Extract page title."""

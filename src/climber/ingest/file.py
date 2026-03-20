@@ -68,7 +68,7 @@ class FileIngester(BaseIngester):
                 )
 
         except Exception as e:
-            raise RuntimeError(f"Failed to read PDF {self.path}: {e}")
+            raise RuntimeError(f"Failed to read PDF {self.path}: {e}") from e
 
     def _ingest_markdown(self) -> ContentItem:
         """Ingest Markdown content."""
@@ -98,7 +98,7 @@ class FileIngester(BaseIngester):
             )
 
         except Exception as e:
-            raise RuntimeError(f"Failed to read Markdown file {self.path}: {e}")
+            raise RuntimeError(f"Failed to read Markdown file {self.path}: {e}") from e
 
     def _ingest_text(self) -> ContentItem:
         """Ingest plain text content."""
@@ -117,4 +117,4 @@ class FileIngester(BaseIngester):
             )
 
         except Exception as e:
-            raise RuntimeError(f"Failed to read text file {self.path}: {e}")
+            raise RuntimeError(f"Failed to read text file {self.path}: {e}") from e
