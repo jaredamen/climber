@@ -5,7 +5,6 @@ from climber.process.chunker import ContentChunker
 
 
 class TestContentChunker:
-
     def test_init(self):
         """Test ContentChunker initialization."""
         chunker = ContentChunker(max_chunk_size=1000, overlap=100)
@@ -53,7 +52,7 @@ class TestContentChunker:
         assert len(chunks) >= 2
         for chunk in chunks:
             # Each chunk should end with a complete sentence (or be the last chunk)
-            assert chunk.endswith('.') or chunk == chunks[-1]
+            assert chunk.endswith(".") or chunk == chunks[-1]
 
     def test_chunk_paragraph_boundaries(self):
         """Test chunking with paragraph boundaries."""

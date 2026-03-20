@@ -31,9 +31,7 @@ def config():
 @config.command("set")
 @click.option("--api-key", help="Set API key")
 @click.option(
-    "--provider",
-    type=click.Choice(["openai", "anthropic"]),
-    help="Set LLM provider"
+    "--provider", type=click.Choice(["openai", "anthropic"]), help="Set LLM provider"
 )
 def config_set(api_key: Optional[str], provider: Optional[str]):
     """Set configuration values."""
@@ -45,6 +43,8 @@ def config_set(api_key: Optional[str], provider: Optional[str]):
     if provider:
         config_obj.set_provider(provider)
         console.print(f"✓ Provider set to {provider}", style="green")
+
+
 @config.command("show")
 def config_show():
     """Show current configuration."""
@@ -59,13 +59,13 @@ def config_show():
     "--output",
     type=click.Choice(["briefing", "flashcards", "audio-script", "all"]),
     default="briefing",
-    help="Output format"
+    help="Output format",
 )
 @click.option(
     "--preset",
     type=click.Choice(["general", "runbook", "changelog"]),
     default="general",
-    help="Content preset"
+    help="Content preset",
 )
 @click.option("--save", type=click.Path(), help="Save output to directory")
 def ingest(source: str, output: str, preset: str, save: Optional[str]):
@@ -75,14 +75,14 @@ def ingest(source: str, output: str, preset: str, save: Optional[str]):
         if not config_obj.api_key:
             console.print(
                 "❌ No API key configured. Run: climber config set --api-key <key>",
-                style="red"
+                style="red",
             )
             raise click.Abort()
 
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
-            console=console
+            console=console,
         ) as progress:
             # Ingest content
             task1 = progress.add_task("Ingesting content...", total=None)

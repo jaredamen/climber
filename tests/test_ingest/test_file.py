@@ -9,7 +9,6 @@ from climber.ingest.file import FileIngester
 
 
 class TestFileIngester:
-
     def test_init(self):
         """Test FileIngester initialization."""
         file_path = "/test/path.txt"
@@ -17,7 +16,7 @@ class TestFileIngester:
         assert str(ingester.path) == file_path
         assert ingester.source == file_path
 
-    @patch('pathlib.Path.exists')
+    @patch("pathlib.Path.exists")
     def test_ingest_file_not_found(self, mock_exists):
         """Test handling of non-existent files."""
         mock_exists.return_value = False
@@ -27,8 +26,8 @@ class TestFileIngester:
         with pytest.raises(FileNotFoundError, match="File not found"):
             ingester.ingest()
 
-    @patch('pathlib.Path.is_file')
-    @patch('pathlib.Path.exists')
+    @patch("pathlib.Path.is_file")
+    @patch("pathlib.Path.exists")
     def test_ingest_not_a_file(self, mock_exists, mock_is_file):
         """Test handling of directories passed as file path."""
         mock_exists.return_value = True
@@ -39,11 +38,13 @@ class TestFileIngester:
         with pytest.raises(ValueError, match="Path is not a file"):
             ingester.ingest()
 
-    @patch('pathlib.Path.read_text')
-    @patch('pathlib.Path.stat')
-    @patch('pathlib.Path.is_file')
-    @patch('pathlib.Path.exists')
-    def test_ingest_text_file(self, mock_exists, mock_is_file, mock_stat, mock_read_text):
+    @patch("pathlib.Path.read_text")
+    @patch("pathlib.Path.stat")
+    @patch("pathlib.Path.is_file")
+    @patch("pathlib.Path.exists")
+    def test_ingest_text_file(
+        self, mock_exists, mock_is_file, mock_stat, mock_read_text
+    ):
         """Test ingesting plain text file."""
         mock_exists.return_value = True
         mock_is_file.return_value = True
@@ -59,11 +60,13 @@ class TestFileIngester:
         assert "file_size" in result.metadata
         assert "line_count" in result.metadata
 
-    @patch('pathlib.Path.read_text')
-    @patch('pathlib.Path.stat')
-    @patch('pathlib.Path.is_file')
-    @patch('pathlib.Path.exists')
-    def test_ingest_markdown_file(self, mock_exists, mock_is_file, mock_stat, mock_read_text):
+    @patch("pathlib.Path.read_text")
+    @patch("pathlib.Path.stat")
+    @patch("pathlib.Path.is_file")
+    @patch("pathlib.Path.exists")
+    def test_ingest_markdown_file(
+        self, mock_exists, mock_is_file, mock_stat, mock_read_text
+    ):
         """Test ingesting markdown file."""
         mock_exists.return_value = True
         mock_is_file.return_value = True
@@ -77,18 +80,20 @@ class TestFileIngester:
         assert result.content_type == "markdown"
         assert result.title == "Main Title"
 
-    @patch('builtins.open', new_callable=mock_open, read_data=b"fake pdf content")
-    @patch('pypdf.PdfReader')
-    @patch('pathlib.Path.is_file')
-    @patch('pathlib.Path.exists')
-    def test_ingest_pdf_file(self, mock_exists, mock_is_file, mock_pdf_reader, mock_file_open):
+    @patch("builtins.open", new_callable=mock_open, read_data=b"fake pdf content")
+    @patch("pypdf.PdfReader")
+    @patch("pathlib.Path.is_file")
+    @patch("pathlib.Path.exists")
+    def test_ingest_pdf_file(
+        self, mock_exists, mock_is_file, mock_pdf_reader, mock_file_open
+    ):
         """Test ingesting PDF file."""
         mock_exists.return_value = True
         mock_is_file.return_value = True
 
         # Mock PDF reader
         mock_reader_instance = Mock()
-        mock_reader_instance.metadata = {'/Title': 'PDF Title'}
+        mock_reader_instance.metadata = {"/Title": "PDF Title"}
         mock_page = Mock()
         mock_page.extract_text.return_value = "PDF content text"
         mock_reader_instance.pages = [mock_page]

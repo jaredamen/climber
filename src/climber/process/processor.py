@@ -17,7 +17,9 @@ class ContentProcessor:
         self.chunker = ContentChunker()
         self.provider = create_provider(config)
 
-    def process(self, content: ContentItem, output_type: str, preset: str) -> dict[str, Any]:
+    def process(
+        self, content: ContentItem, output_type: str, preset: str
+    ) -> dict[str, Any]:
         """Process content and generate output."""
         # Chunk content for processing
         chunks = self.chunker.chunk(content)
@@ -27,19 +29,24 @@ class ContentProcessor:
 
         if len(chunks) == 1:
             # Single chunk processing
-            return self._process_single_chunk(chunks[0], content, prompt_template, output_type)
+            return self._process_single_chunk(
+                chunks[0], content, prompt_template, output_type
+            )
         else:
             # Multi-chunk processing - summarize each chunk then combine
-            return self._process_multiple_chunks(chunks, content, prompt_template, output_type)
+            return self._process_multiple_chunks(
+                chunks, content, prompt_template, output_type
+            )
 
-    def _process_single_chunk(self, chunk: str, content: ContentItem,
-                            prompt_template: str, output_type: str) -> dict[str, Any]:
+    def _process_single_chunk(
+        self, chunk: str, content: ContentItem, prompt_template: str, output_type: str
+    ) -> dict[str, Any]:
         """Process a single content chunk."""
         # Format the prompt with content and metadata
         prompt = prompt_template.format(
             content=chunk,
             title=content.title or "Document",
-            source=content.source or "Unknown"
+            source=content.source or "Unknown",
         )
 
         # Get response from LLM provider
@@ -50,11 +57,12 @@ class ContentProcessor:
             "content": response,
             "source": content.source,
             "title": content.title,
-            "chunk_count": 1
+            "chunk_count": 1,
         }
 
-    def _process_multiple_chunks(self, chunks: list, content: ContentItem,
-                               prompt_template: str, output_type: str) -> dict[str, Any]:
+    def _process_multiple_chunks(
+        self, chunks: list, content: ContentItem, prompt_template: str, output_type: str
+    ) -> dict[str, Any]:
         """Process multiple content chunks and combine results."""
         chunk_results = []
 
@@ -63,7 +71,7 @@ class ContentProcessor:
                 content=chunk,
                 title=content.title or "Document",
                 source=content.source or "Unknown",
-                chunk_info=f" (Part {i+1} of {len(chunks)})"
+                chunk_info=f" (Part {i + 1} of {len(chunks)})",
             )
 
             response = self.provider.generate(prompt)
@@ -84,7 +92,7 @@ class ContentProcessor:
             "content": combined_content,
             "source": content.source,
             "title": content.title,
-            "chunk_count": len(chunks)
+            "chunk_count": len(chunks),
         }
 
     def _combine_briefings(self, briefings: list) -> str:
@@ -93,7 +101,7 @@ class ContentProcessor:
         combine_prompt = f"""
 Combine these briefing sections into a single, coherent 2-minute executive summary:
 
-{chr(10).join(f"Section {i+1}: {briefing}" for i, briefing in enumerate(briefings))}
+{chr(10).join(f"Section {i + 1}: {briefing}" for i, briefing in enumerate(briefings))}
 
 Create a unified briefing that covers all key points without redundancy.
 """
@@ -109,7 +117,7 @@ Create a unified briefing that covers all key points without redundancy.
         combine_prompt = f"""
 Combine these audio script sections into a single, coherent teaching script:
 
-{chr(10).join(f"Section {i+1}: {script}" for i, script in enumerate(scripts))}
+{chr(10).join(f"Section {i + 1}: {script}" for i, script in enumerate(scripts))}
 
 Create a unified script that flows naturally from one section to the next.
 """

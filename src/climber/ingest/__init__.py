@@ -12,10 +12,11 @@ def create_ingester(source: str) -> BaseIngester:
     else:
         return FileIngester(source)
 
+
 __all__ = [
     "BaseIngester",
     "ContentItem",
     "WebIngester",
     "FileIngester",
-    "create_ingester"
+    "create_ingester",
 ]

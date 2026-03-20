@@ -20,9 +20,7 @@ class AnthropicProvider(BaseLLMProvider):
                 model=self.model,
                 max_tokens=2000,
                 temperature=0.7,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}],
             )
 
             return message.content[0].text

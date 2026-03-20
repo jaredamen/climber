@@ -24,7 +24,7 @@ def sample_content():
         text="This is sample content for testing. It contains multiple sentences. Some are longer than others. This helps test chunking and processing.",
         title="Test Document",
         source="test://example.com",
-        content_type="test"
+        content_type="test",
     )
 
 

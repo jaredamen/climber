@@ -8,6 +8,7 @@ from typing import Optional
 @dataclass
 class ContentItem:
     """A piece of content with metadata."""
+
     text: str
     title: Optional[str] = None
     source: Optional[str] = None
@@ -37,10 +38,11 @@ class BaseIngester(ABC):
 
         # Remove citation markers [1], [2], etc.
         import re
-        text = re.sub(r'\[\d+\]', '', text)
+
+        text = re.sub(r"\[\d+\]", "", text)
 
         # Remove extra punctuation patterns
-        text = re.sub(r'\.{2,}', '...', text)
-        text = re.sub(r'\s+', ' ', text)
+        text = re.sub(r"\.{2,}", "...", text)
+        text = re.sub(r"\s+", " ", text)
 
         return text.strip()

@@ -8,7 +8,6 @@ from climber.output.flashcards import FlashcardsFormatter
 
 
 class TestBriefingFormatter:
-
     def test_file_extension(self):
         """Test briefing formatter file extension."""
         formatter = BriefingFormatter()
@@ -20,7 +19,7 @@ class TestBriefingFormatter:
         result = {
             "content": "This is the briefing content.",
             "title": "Test Title",
-            "source": "https://example.com"
+            "source": "https://example.com",
         }
 
         output = formatter.format(result)
@@ -37,7 +36,7 @@ class TestBriefingFormatter:
             "content": "Multi-chunk briefing content.",
             "title": "Test Title",
             "source": "test source",
-            "chunk_count": 3
+            "chunk_count": 3,
         }
 
         output = formatter.format(result)
@@ -46,7 +45,6 @@ class TestBriefingFormatter:
 
 
 class TestFlashcardsFormatter:
-
     def test_file_extension(self):
         """Test flashcards formatter file extension."""
         formatter = FlashcardsFormatter()
@@ -56,18 +54,20 @@ class TestFlashcardsFormatter:
         """Test formatting flashcards with JSON content."""
         formatter = FlashcardsFormatter()
 
-        json_content = json.dumps({
-            "flashcards": [
-                {"question": "What is X?", "answer": "X is Y"},
-                {"question": "How does Z work?", "answer": "Z works by..."}
-            ]
-        })
+        json_content = json.dumps(
+            {
+                "flashcards": [
+                    {"question": "What is X?", "answer": "X is Y"},
+                    {"question": "How does Z work?", "answer": "Z works by..."},
+                ]
+            }
+        )
 
         result = {
             "content": json_content,
             "title": "Test Cards",
             "source": "test source",
-            "chunk_count": 1
+            "chunk_count": 1,
         }
 
         output = formatter.format(result)
@@ -94,14 +94,17 @@ class TestFlashcardsFormatter:
         result = {
             "content": text_content,
             "title": "Test Cards",
-            "source": "test source"
+            "source": "test source",
         }
 
         output = formatter.format(result)
         parsed_output = json.loads(output)
 
         assert len(parsed_output["flashcards"]) >= 1
-        assert all("question" in card and "answer" in card for card in parsed_output["flashcards"])
+        assert all(
+            "question" in card and "answer" in card
+            for card in parsed_output["flashcards"]
+        )
 
     def test_extract_flashcards_from_json(self):
         """Test extracting flashcards from JSON format."""
@@ -134,7 +137,6 @@ class TestFlashcardsFormatter:
 
 
 class TestAudioScriptFormatter:
-
     def test_file_extension(self):
         """Test audio script formatter file extension."""
         formatter = AudioScriptFormatter()
@@ -146,7 +148,7 @@ class TestAudioScriptFormatter:
         result = {
             "content": "Welcome to this audio script about testing.",
             "title": "Test Script",
-            "source": "test source"
+            "source": "test source",
         }
 
         output = formatter.format(result)
@@ -165,7 +167,7 @@ class TestAudioScriptFormatter:
             "content": "Multi-chunk script content.",
             "title": "Test Script",
             "source": "test source",
-            "chunk_count": 2
+            "chunk_count": 2,
         }
 
         output = formatter.format(result)

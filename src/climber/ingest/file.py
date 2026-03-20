@@ -24,11 +24,11 @@ class FileIngester(BaseIngester):
 
         suffix = self.path.suffix.lower()
 
-        if suffix == '.pdf':
+        if suffix == ".pdf":
             return self._ingest_pdf()
-        elif suffix in ['.md', '.markdown']:
+        elif suffix in [".md", ".markdown"]:
             return self._ingest_markdown()
-        elif suffix in ['.txt', '.text']:
+        elif suffix in [".txt", ".text"]:
             return self._ingest_text()
         else:
             # Try to read as text
@@ -37,16 +37,16 @@ class FileIngester(BaseIngester):
     def _ingest_pdf(self) -> ContentItem:
         """Ingest PDF content."""
         try:
-            with open(self.path, 'rb') as file:
+            with open(self.path, "rb") as file:
                 pdf_reader = pypdf.PdfReader(file)
 
                 # Extract metadata
                 metadata = {}
                 if pdf_reader.metadata:
                     metadata = {
-                        "title": pdf_reader.metadata.get('/Title'),
-                        "author": pdf_reader.metadata.get('/Author'),
-                        "pages": len(pdf_reader.pages)
+                        "title": pdf_reader.metadata.get("/Title"),
+                        "author": pdf_reader.metadata.get("/Author"),
+                        "pages": len(pdf_reader.pages),
                     }
 
                 # Extract text from all pages
@@ -64,7 +64,7 @@ class FileIngester(BaseIngester):
                     title=title,
                     source=str(self.path),
                     content_type="pdf",
-                    metadata=metadata
+                    metadata=metadata,
                 )
 
         except Exception as e:
@@ -73,13 +73,13 @@ class FileIngester(BaseIngester):
     def _ingest_markdown(self) -> ContentItem:
         """Ingest Markdown content."""
         try:
-            text = self.path.read_text(encoding='utf-8')
+            text = self.path.read_text(encoding="utf-8")
 
             # Extract title from first heading if present
             title = None
-            lines = text.split('\n')
+            lines = text.split("\n")
             for line in lines:
-                if line.startswith('# '):
+                if line.startswith("# "):
                     title = line[2:].strip()
                     break
 
@@ -93,8 +93,8 @@ class FileIngester(BaseIngester):
                 content_type="markdown",
                 metadata={
                     "file_size": self.path.stat().st_size,
-                    "line_count": len(lines)
-                }
+                    "line_count": len(lines),
+                },
             )
 
         except Exception as e:
@@ -103,7 +103,7 @@ class FileIngester(BaseIngester):
     def _ingest_text(self) -> ContentItem:
         """Ingest plain text content."""
         try:
-            text = self.path.read_text(encoding='utf-8')
+            text = self.path.read_text(encoding="utf-8")
 
             return ContentItem(
                 text=self._clean_text(text),
@@ -112,8 +112,8 @@ class FileIngester(BaseIngester):
                 content_type="text",
                 metadata={
                     "file_size": self.path.stat().st_size,
-                    "line_count": len(text.split('\n'))
-                }
+                    "line_count": len(text.split("\n")),
+                },
             )
 
         except Exception as e:

@@ -18,12 +18,14 @@ class WebIngester(BaseIngester):
     def ingest(self) -> ContentItem:
         """Ingest content from a web URL."""
         try:
-            response = requests.get(self.url, headers={
-                'User-Agent': 'Mozilla/5.0 (Climber Knowledge Digester)'
-            }, timeout=30)
+            response = requests.get(
+                self.url,
+                headers={"User-Agent": "Mozilla/5.0 (Climber Knowledge Digester)"},
+                timeout=30,
+            )
             response.raise_for_status()
 
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, "html.parser")
 
             # Remove script and style elements
             for script in soup(["script", "style"]):
@@ -40,8 +42,8 @@ class WebIngester(BaseIngester):
                 metadata={
                     "url": self.url,
                     "status_code": response.status_code,
-                    "content_length": len(text)
-                }
+                    "content_length": len(text),
+                },
             )
 
         except requests.RequestException as e:
@@ -50,11 +52,11 @@ class WebIngester(BaseIngester):
     def _extract_title(self, soup: BeautifulSoup) -> Optional[str]:
         """Extract page title."""
         # Try various title sources
-        title_tag = soup.find('title')
+        title_tag = soup.find("title")
         if title_tag:
             return title_tag.get_text().strip()
 
-        h1_tag = soup.find('h1')
+        h1_tag = soup.find("h1")
         if h1_tag:
             return h1_tag.get_text().strip()
 
@@ -66,14 +68,21 @@ class WebIngester(BaseIngester):
         main_content = None
 
         # Look for common content containers
-        for selector in ['main', 'article', '[role="main"]', '.content', '#content', '.post']:
+        for selector in [
+            "main",
+            "article",
+            '[role="main"]',
+            ".content",
+            "#content",
+            ".post",
+        ]:
             main_content = soup.select_one(selector)
             if main_content:
                 break
 
         # Fallback to body
         if not main_content:
-            main_content = soup.find('body')
+            main_content = soup.find("body")
 
         if not main_content:
             main_content = soup
@@ -83,24 +92,25 @@ class WebIngester(BaseIngester):
         current_section = {"title": "", "text": []}
 
         # Process all elements in order
-        for element in main_content.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span']):
-            if element.name.startswith('h'):
+        for element in main_content.find_all(
+            ["h1", "h2", "h3", "h4", "h5", "h6", "p", "div", "span"]
+        ):
+            if element.name.startswith("h"):
                 # Save previous section if it has content
                 if current_section["text"]:
                     section_text = " ".join(current_section["text"])
                     if section_text.strip():
                         if current_section["title"]:
-                            content_parts.append(f"{current_section['title']}: {section_text}")
+                            content_parts.append(
+                                f"{current_section['title']}: {section_text}"
+                            )
                         else:
                             content_parts.append(section_text)
 
                 # Start new section
-                current_section = {
-                    "title": element.get_text().strip(),
-                    "text": []
-                }
+                current_section = {"title": element.get_text().strip(), "text": []}
 
-            elif element.name in ['p', 'div', 'span']:
+            elif element.name in ["p", "div", "span"]:
                 text = element.get_text().strip()
                 if text and text not in ["Contents", ""]:
                     current_section["text"].append(text)

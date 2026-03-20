@@ -7,9 +7,8 @@ from climber.process.processor import ContentProcessor
 
 
 class TestContentProcessor:
-
-    @patch('climber.process.processor.create_provider')
-    @patch('climber.process.processor.get_prompt_template')
+    @patch("climber.process.processor.create_provider")
+    @patch("climber.process.processor.get_prompt_template")
     def test_init(self, mock_get_prompt, mock_create_provider, mock_config):
         """Test ContentProcessor initialization."""
         mock_provider = Mock()
@@ -21,9 +20,11 @@ class TestContentProcessor:
         assert processor.provider == mock_provider
         mock_create_provider.assert_called_once_with(mock_config)
 
-    @patch('climber.process.processor.create_provider')
-    @patch('climber.process.processor.get_prompt_template')
-    def test_process_single_chunk(self, mock_get_prompt, mock_create_provider, mock_config, sample_content):
+    @patch("climber.process.processor.create_provider")
+    @patch("climber.process.processor.get_prompt_template")
+    def test_process_single_chunk(
+        self, mock_get_prompt, mock_create_provider, mock_config, sample_content
+    ):
         """Test processing single chunk content."""
         # Mock provider
         mock_provider = Mock()
@@ -42,20 +43,26 @@ class TestContentProcessor:
         assert result["title"] == sample_content.title
         assert result["chunk_count"] == 1
 
-    @patch('climber.process.processor.create_provider')
-    @patch('climber.process.processor.get_prompt_template')
-    def test_process_multiple_chunks(self, mock_get_prompt, mock_create_provider, mock_config):
+    @patch("climber.process.processor.create_provider")
+    @patch("climber.process.processor.get_prompt_template")
+    def test_process_multiple_chunks(
+        self, mock_get_prompt, mock_create_provider, mock_config
+    ):
         """Test processing multiple chunk content."""
         # Create large content that will be chunked
         large_content = ContentItem(
             text="A" * 5000,  # Large enough to trigger chunking
             title="Large Document",
-            source="test://large.com"
+            source="test://large.com",
         )
 
         # Mock provider
         mock_provider = Mock()
-        mock_provider.generate.side_effect = ["Chunk 1 result", "Chunk 2 result", "Combined result"]
+        mock_provider.generate.side_effect = [
+            "Chunk 1 result",
+            "Chunk 2 result",
+            "Combined result",
+        ]
         mock_create_provider.return_value = mock_provider
 
         # Mock prompt template
@@ -72,9 +79,11 @@ class TestContentProcessor:
         assert result["chunk_count"] == 2
         assert mock_provider.generate.call_count == 3  # 2 chunks + 1 combine
 
-    @patch('climber.process.processor.create_provider')
-    @patch('climber.process.processor.get_prompt_template')
-    def test_combine_briefings(self, mock_get_prompt, mock_create_provider, mock_config):
+    @patch("climber.process.processor.create_provider")
+    @patch("climber.process.processor.get_prompt_template")
+    def test_combine_briefings(
+        self, mock_get_prompt, mock_create_provider, mock_config
+    ):
         """Test combining multiple briefing results."""
         mock_provider = Mock()
         mock_provider.generate.return_value = "Combined briefing"
@@ -94,7 +103,7 @@ class TestContentProcessor:
         assert "Brief 2" in call_args
         assert "Brief 3" in call_args
 
-    @patch('climber.process.processor.create_provider')
+    @patch("climber.process.processor.create_provider")
     def test_combine_flashcards(self, mock_create_provider, mock_config):
         """Test combining flashcard sets."""
         mock_provider = Mock()

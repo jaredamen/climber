@@ -1,5 +1,6 @@
 """Audio script prompt templates."""
 
+
 def get_audio_script_prompt(preset: str) -> str:
     """Get audio script prompt for the specified preset."""
 
@@ -27,21 +28,21 @@ Format as a structured script with clear sections and natural flow.
 
     presets = {
         "general": base_audio_script,
-
-        "runbook": base_audio_script + """
+        "runbook": base_audio_script
+        + """
 - Focus on step-by-step procedures and operational guidance
 - Use "First, you'll want to...", "Next, make sure to...", "If this happens..."
 - Explain the reasoning behind each step
 - Include troubleshooting tips and common pitfalls
 - Make it sound like experienced colleague training
 """,
-
-        "changelog": base_audio_script + """
+        "changelog": base_audio_script
+        + """
 - Structure as "What's changed and why you should care"
 - Use "The big news is...", "This affects you if...", "Here's what you need to know..."
 - Explain the context and impact of changes
 - Include upgrade recommendations and timeline considerations
-"""
+""",
     }
 
     return presets.get(preset, base_audio_script)

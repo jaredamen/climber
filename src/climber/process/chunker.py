@@ -1,6 +1,5 @@
 """Content chunking for LLM consumption."""
 
-
 from ..ingest.base import ContentItem
 
 
@@ -32,14 +31,14 @@ class ContentChunker:
                 break
 
             # Try to break at sentence boundary
-            sentence_end = text.rfind('.', current_pos, chunk_end)
+            sentence_end = text.rfind(".", current_pos, chunk_end)
             if sentence_end == -1:
                 # Try paragraph boundary
-                sentence_end = text.rfind('\n\n', current_pos, chunk_end)
+                sentence_end = text.rfind("\n\n", current_pos, chunk_end)
 
             if sentence_end == -1:
                 # Try any whitespace
-                sentence_end = text.rfind(' ', current_pos, chunk_end)
+                sentence_end = text.rfind(" ", current_pos, chunk_end)
 
             if sentence_end == -1 or sentence_end <= current_pos:
                 # Force break at max size
