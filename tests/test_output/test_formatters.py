@@ -86,7 +86,7 @@ class TestFlashcardsFormatter:
         text_content = """
         Q: What is Python?
         A: Python is a programming language.
-        
+
         Q: What is Django?
         A: Django is a web framework.
         """
@@ -121,7 +121,7 @@ class TestFlashcardsFormatter:
         text_content = """
         Q: First question?
         A: First answer.
-        
+
         Question: Second question?
         Answer: Second answer.
         """
