@@ -147,7 +147,7 @@ cython_debug/
 # Climber specific
 .climber/
 *.climber
-output/
+/output/
 study-materials/
 
 # API keys and secrets
