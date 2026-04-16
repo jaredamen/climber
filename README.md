@@ -1,4 +1,6 @@
-# Climber
+# Climber (Archived)
+
+> **This project has been superseded by [Basecamp](https://basecamp-pink.vercel.app)** — a web app that does everything Climber does, plus managed AI (no API key needed), metered billing, interactive flashcard study, audio playback, and more. Use Basecamp instead.
 
 [![CI Status](https://github.com/jaredamen/climber/workflows/CI/badge.svg)](https://github.com/jaredamen/climber/actions)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
@@ -22,7 +24,7 @@ Climber transforms technical documentation, web articles, and PDFs into digestib
 ### Installation
 
 ```bash
-pip install climber
+pip install climber-ai
 ```
 
 ### Configuration
