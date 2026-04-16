@@ -1,6 +1,6 @@
 # Climber
 
-[![CI Status](https://github.com/YusefAmen/climber/workflows/CI/badge.svg)](https://github.com/YusefAmen/climber/actions)
+[![CI Status](https://github.com/jaredamen/climber/workflows/CI/badge.svg)](https://github.com/jaredamen/climber/actions)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -260,7 +260,7 @@ The flashcards output is compatible with the [basecamp companion app](https://ba
 ### Local Development
 
 ```bash
-git clone https://github.com/YusefAmen/climber.git
+git clone https://github.com/jaredamen/climber.git
 cd climber
 uv venv
 source .venv/bin/activate
